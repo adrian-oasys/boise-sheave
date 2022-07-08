@@ -1,83 +1,52 @@
 class TicTacToe
   def initialize(board)
     @board = board
+    @n = @board.size
   end
 
   def winner
-    row1 = @board[0]
-    row2 = @board[1]
-    row3 = @board[2]
+    return 'o' if check_matrix?('o')
+    return 'x' if check_matrix?('x')
+    return 'unfinished' if @board.any? { |row| row.any? { |x| x == ' ' } }
 
-    # row checks
+    'draw'
+  end
 
-    if row1[0] == "o" && row1[1] == "o" && row1[2] == "o"
-      return "o"
-    end
+  private
 
-    if row2[0] == "o" && row2[1] == "o" && row2[2] == "o"
-      return "o"
-    end
+  def check_matrix?(sign)
+    check_rows?(sign) || check_columns?(sign) || check_diagonal?(sign)
+  end
 
-    if row3[0] == "o" && row3[1] == "o" && row3[2] == "o"
-      return "o"
-    end
+  def check_rows?(sign)
+    @board.any? { |row| row.all? { |x| x == sign } }
+  end
 
-    if row1[0] == "x" && row1[1] == "x" && row1[2] == "x"
-      return "x"
-    end
+  def check_columns?(sign)
+    rotated_board.any? { |row| row.all? { |x| x == sign } }
+  end
 
-    if row2[0] == "x" && row2[1] == "x" && row2[2] == "x"
-      return "x"
-    end
+  def check_diagonal?(sign)
+    check_main_diagonal?(sign) || check_anti_diagonal?(sign)
+  end
 
-    if row3[0] == "x" && row3[1] == "x" && row3[2] == "x"
-      return "x"
-    end
+  def check_main_diagonal?(sign)
+    main_diagonal.all? { |x| x == sign }
+  end
 
-    # column checks
+  def check_anti_diagonal?(sign)
+    anti_diagonal.all? { |x| x == sign }
+  end
 
-    if row1[0] == "o" && row2[0] == "o" && row3[0] == "o"
-      return "o"
-    end
+  def rotated_board
+    @rotated_board ||= @board.transpose.map(&:reverse)
+  end
 
-    if row1[1] == "o" && row2[1] == "o" && row3[1] == "o"
-      return "o"
-    end
+  def main_diagonal
+    @main_diagonal ||= (0..@n - 1).to_a.map { |i| @board[i][i] }
+  end
 
-    if row1[2] == "o" && row2[2] == "o" && row3[2] == "o"
-      return "o"
-    end
-
-    if row1[0] == "x" && row2[0] == "x" && row3[0] == "x"
-      return "x"
-    end
-
-    if row1[1] == "x" && row2[1] == "x" && row3[1] == "x"
-      return "x"
-    end
-
-    if row1[2] == "x" && row2[2] == "x" && row3[2] == "x"
-      return "x"
-    end
-
-    # diagonal checks
-
-    if row1[0] == "o" && row2[1] == "o" && row3[2] == "o"
-      return "o"
-    end
-
-    if row1[2] == "o" && row2[1] == "o" && row3[0] == "o"
-      return "o"
-    end
-
-    if row1[0] == "x" && row2[1] == "x" && row3[2] == "x"
-      return "x"
-    end
-
-    if row1[2] == "x" && row2[1] == "x" && row3[0] == "x"
-      return "x"
-    end
-
-    return "draw"
+  def anti_diagonal
+    @anti_diagonal ||= (0..@n - 1).to_a.map { |i| @board[i][@n - i - 1] }
   end
 end
