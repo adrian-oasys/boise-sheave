@@ -39,7 +39,7 @@ class TicTacToe
   end
 
   def rotated_board
-    @rotated_board ||= @board.transpose.map(&:reverse)
+    @rotated_board ||= @board.transpose
   end
 
   def main_diagonal
